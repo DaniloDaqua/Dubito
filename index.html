@@ -59,6 +59,33 @@
     function update ()
     {
     }
+
+    function makeCard(suit, number) {
+        const suits = {
+            0:'clubs',
+            1:'spades',
+            2:'hearts',
+            3:'diamonds'
+        };
+        const numberMap = {
+            1:'ace',
+            11:'jack',
+            12:'queen',
+            13:'king'
+        };
+        
+        return {suit:suits[suit], number:numberMap[number] || number}; 
+    }
+
+    let deck=[];
+    for (let number = 1; number < 14; number++) {
+        for (let suit = 0; suit < 4; suit++) {
+            deck.push(makeCard(suit,number));
+        }
+    }
+
+    console.table(deck);
+
     </script>
 
 </body>
