@@ -1,53 +1,57 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
-</head>
-<body>
+  </head>
 
+  <body>
     <script>
-    var config = {
+      const config = {
         type: Phaser.AUTO,
         width: 900,
         height: 800,
         physics: {
-            default: 'arcade',
-            arcade: {
-                gravity: { y: 500 }
+          default: "arcade",
+          arcade: {
+            gravity: {
+              y: 500
             }
+          }
         },
         scene: {
-            preload: preload,
-            create: create,
-            update: update
+          preload: preload,
+          create: create,
+          update: update
         }
-    };
+      };
 
-    var game = new Phaser.Game(config);
+      const game = new Phaser.Game(config);
 
-    function preload ()
-    {
-        
-        this.load.image('logo', 'https://raw.githubusercontent.com/DaniloDaqua/Dubito/master/img/bullshit1.jpg');
-        this.load.setBaseURL('http://labs.phaser.io');
+      function preload() {
+        this.load.image(
+          "logo",
+          "https://raw.githubusercontent.com/DaniloDaqua/Dubito/master/img/bullshit1.jpg"
+        );
 
-        this.load.image('sky', 'assets/skies/space3.png');
-        
-        this.load.image('red', 'assets/particles/red.png');
-    }
+        this.load.setBaseURL("http://labs.phaser.io");
+        this.load.image("sky", "assets/skies/space3.png");
+        this.load.image("red", "assets/particles/red.png");
+      }
 
-    function create ()
-    {
-        this.add.image(450, 400, 'sky');
+      function create() {
+        this.add.image(450, 400, "sky");
 
-                var logo = this.physics.add.image(100, 10, 'logo');
+        const logo = this.physics.add.image(100, 10, "logo");
 
-        var particles = this.add.particles('red');
+        const particles = this.add.particles("red");
 
-        var emitter = particles.createEmitter({
-            speed: 300,
-            scale: { start: 10, end: 0 },
-            blendMode: 'ADD'
+        const emitter = particles.createEmitter({
+          speed: 300,
+          scale: {
+            start: 10,
+            end: 0
+          },
+          blendMode: "ADD"
         });
 
         logo.setVelocity(100, 200);
@@ -55,38 +59,47 @@
         logo.setCollideWorldBounds(true);
 
         //emitter.startFollow(logo);
-    }
-    function update ()
-    {
-    }
+      }
 
-    function makeCard(suit, number) {
-        const suits = {
-            0:'clubs',
-            1:'spades',
-            2:'hearts',
-            3:'diamonds'
-        };
-        const numberMap = {
-            1:'ace',
-            11:'jack',
-            12:'queen',
-            13:'king'
-        };
-        
-        return {suit:suits[suit], number:numberMap[number] || number}; 
-    }
+      function update() {}
 
-    let deck=[];
-    for (let number = 1; number < 14; number++) {
+      function makeCard(suitNum = 0, number = 0) {
+        const suitMap = {
+          0: "clubs",
+          1: "diamonds",
+          2: "hearts",
+          3: "spades"
+        };
+        const colorMap = {
+          0: "black",
+          1: "red",
+          2: "red",
+          3: "black"
+        };
+        const rankMap = {
+          1: "ace",
+          11: "jack",
+          12: "queen",
+          13: "king"
+        };
+
+        return {
+          number: number,
+          rank: rankMap[number] || number.toString(),
+          suit: suitMap[suitNum],
+          color: colorMap[suitNum]
+        };
+      }
+
+      const deck = [];
+
+      for (let number = 1; number < 14; number++) {
         for (let suit = 0; suit < 4; suit++) {
-            deck.push(makeCard(suit,number));
+          deck.push(makeCard(suit, number));
         }
-    }
+      }
 
-    console.table(deck);
-
+      console.table(deck);
     </script>
-
-</body>
+  </body>
 </html>
