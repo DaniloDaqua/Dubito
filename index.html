@@ -46,17 +46,17 @@
         const particles = this.add.particles("red");
 
         const emitter = particles.createEmitter({
-          speed: 300,
+          speed: 5,
           scale: {
-            start: 10,
+            start: 1,
             end: 0
           },
           blendMode: "ADD"
         });
 
-        logo.setVelocity(100, 200);
-        logo.setBounce(1, 1);
-        logo.setCollideWorldBounds(true);
+        logo.setVelocity(5, 7);
+        //logo.setBounce(1, 1);
+        logo.setCollideWorldBounds(false);
 
         //emitter.startFollow(logo);
       }
@@ -97,15 +97,19 @@
           cards: [],
           addCard(card = {}) {
             this.cards.push(card);
+            return this;
           },
           addCards(cards = []) {
             this.cards.concat(cards);
+            return this;
           }
         };
       }
 
       const deck = [];
+      const pile = [];
 
+      // creare carte
       for (let number = 1; number < 14; number++) {
         for (let suit = 0; suit < 4; suit++) {
           deck.push(makeCard(suit, number));
@@ -114,7 +118,28 @@
 
       shuffle(deck);
 
+      const players = [
+        makePlayer("player"),
+        makePlayer("bot 1"),
+        makePlayer("bot 2"),
+        makePlayer("bot 3")
+      ];
+
+      // dare le carte a i giocatori finchè tutti possono averne 1 ad ogni giro
+      while (deck.length >= players.length) {
+        players.forEach(player => {
+          player.addCard(deck.pop());
+        });
+      }
+
+      // nel caso rimangono carte, mettile nel centro
+      while (deck.length > 0) {
+        pile.push(deck.pop());
+      }
+
       console.table(deck);
+      console.table(pile);
+      console.table(players[0].cards);
 
       function shuffle(arra1) {
         let ctr = arra1.length;
