@@ -91,6 +91,19 @@
         };
       }
 
+      function makePlayer(name = "") {
+        return {
+          name: name,
+          cards: [],
+          addCard(card = {}) {
+            this.cards.push(card);
+          },
+          addCards(cards = []) {
+            this.cards.concat(cards);
+          }
+        };
+      }
+
       const deck = [];
 
       for (let number = 1; number < 14; number++) {
