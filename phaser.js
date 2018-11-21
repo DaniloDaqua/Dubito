@@ -2,8 +2,8 @@
 
 const config = {
     type: Phaser.AUTO,
-    width: 900,
-    height: 800,
+    width: 800,
+    height: 600,
     physics: {
         default: "arcade",
         arcade: {
@@ -24,7 +24,7 @@ const game = new Phaser.Game(config);
 function preload() {
     this.load.image(
         "logo",
-        "https://raw.githubusercontent.com/DaniloDaqua/Dubito/master/img/bullshit1.jpg"
+        "https://raw.githubusercontent.com/DaniloDaqua/Dubito/77dc0cb14868dd96c88da168f890bbbaf636df39/img/966aa029b7f3b7b1b0669b6f6f4a6294--food-spain-drawing-cartoons.jpg"
     );
 
     this.load.setBaseURL("http://labs.phaser.io");
@@ -35,7 +35,7 @@ function preload() {
 function create() {
     this.add.image(450, 400, "sky");
 
-    const logo = this.physics.add.image(100, 10, "logo");
+    const logo = this.add.image(400, 300, "logo");
 
     //const particles = this.add.particles("red");
 
@@ -49,7 +49,7 @@ function create() {
     });*/
 
     logo.setVelocity(5, 7);
-    //logo.setBounce(1, 1);
+    logo.setBounce(1, 1);
     logo.setCollideWorldBounds(false);
 
     //emitter.startFollow(logo);
