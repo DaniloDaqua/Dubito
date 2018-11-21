@@ -61,7 +61,7 @@ class Card {
             1: "red",
             2: "red",
             3: "black"
-        };
+        }; //why color??
         const rankMap = {
             1: "ace",
             11: "jack",
