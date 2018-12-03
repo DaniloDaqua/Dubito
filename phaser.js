@@ -22,6 +22,7 @@ const config = {
 };
 
 const game = new Phaser.Game(config);
+const cardFontSize = 32;
 
 function preload() {
     this.load.image(
@@ -36,11 +37,12 @@ function preload() {
 
 function create() {
     const logo = this.add.image(400, 300, "logo");
-    // 32 px cooincide con il font size (32px)
-    createCard(this, new Card(1, 3), 0, 0);
-    createCard(this, new Card(0, 1), 32, 0);
-    //createCard(this, new Card(2, 13), 0, 32);
-    createCard(this, new Card(3, 11), 32, 32);
+    const p = position => position * cardFontSize;
+    createCard(this, new Card(1, 12), p(0), p(0));
+    createCard(this, new Card(0, 1), p(1), p(0));
+    createCard(this, new Card(3, 11), p(1), p(1));
+    createCard(this, new Card(2, 13), p(2), p(1));
+    createCard(this, new Card(2, 13), p(2), p(2));
 }
 
 function update() {}
@@ -49,7 +51,7 @@ function createCard(self, card, x, y) {
     
     const c = self.add.container(x, y);
     const g = self.add.graphics();
-    const t = self.add.text(5, 5, card.rank, { fontSize: '32px', fill: card.color });
+    const t = self.add.text(5, 5, card.rank, { fontSize: `${cardFontSize}px`, fill: card.color });
 
     const w = 100;
     const h = 140;
