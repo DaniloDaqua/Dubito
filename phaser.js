@@ -2,6 +2,8 @@
 
 // http://phaser.io/tutorials/making-your-first-phaser-3-game
 
+// todo: use require() to load other js split into multiple files
+
 const config = {
     type: Phaser.AUTO,
     width: 800,
@@ -22,7 +24,7 @@ const config = {
 };
 
 const game = new Phaser.Game(config);
-const cardFontSize = 32;
+const cardFontSize = 20;
 
 function preload() {
     this.load.image(
@@ -37,7 +39,8 @@ function preload() {
 
 function create() {
     const logo = this.add.image(400, 300, "logo");
-    const p = position => position * cardFontSize;
+    const pw = position => position * cardFontSize * 1.6;
+    const ph = position => position * cardFontSize;
 
     const myGame = new Game([
         new Player("player"),
@@ -50,7 +53,7 @@ function create() {
     let x=1, y=14;
 
     for (const card of myGame.players[0].hand) {
-        createCard(this, card, p(x), p(y));
+        createCard(this, card, pw(x), 450);
         x++;
     }
 }
