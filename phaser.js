@@ -53,18 +53,19 @@ function create() {
     let x = 1;
 
     for (const card of myGame.players[0].hand) {
-        createCard(this, card, pw(x), 450);
+        displayCard(this, card, pw(x), 450);
         x++;
     }
 }
 
 function update() { }
 
-function createCard(self, card, x, y) {
+function displayCard(self, card, x, y) {
 
     const c = self.add.container(x, y);
     const g = self.add.graphics();
     const t = self.add.text(5, 5, card.rank, { fontSize: `${cardFontSize}px`, fill: card.color });
+    const s = self.add.text(5, 5 + cardFontSize, card.getSuit(), { fontSize: `${cardFontSize*.55}px`, fill: card.color });
 
     const w = 100;  // card width
     const h = 140;  // card height
@@ -86,7 +87,7 @@ function createCard(self, card, x, y) {
 
     g.fillRoundedRect(0, 0, w, h, r);
     g.strokeRoundedRect(0, 0, w, h, r);
-    c.add([g, t]);
+    c.add([g, t, s]);
     return c;
 }
 
@@ -128,9 +129,10 @@ class Game {
  * Un ogetto che rappresenta una carta
  * 
  * @property {number} number numero della carta da 1-13
+ * @property {number} suitNum seme della carta da 0-3
  * @property {string} rank 'ace', '2', '6', 'jack', ecc
  * @property {string} suit 'clubs', 'hearts', ecc
- * @property {string} color 'red' o 'black'
+ * @property {string} color '#EC0D0D' o '#0E1111'
  */
 class Card {
     /**
@@ -158,9 +160,23 @@ class Card {
             13: "K"
         };
         this.number = number;
+        this.suitNum = suitNum;
         this.rank = rankMap[number] || number.toString();
         this.suit = suitMap[suitNum];
         this.color = colorMap[this.suit];
+    }
+    getSuit(){
+        return this.suit.charAt(0).toUpperCase() + this.suit.charAt(1);
+    }
+    static compareRank(a, b) {
+        return a.number - b.number;
+    }
+    static compareSuit(a, b) {
+        return a.suitNum - b.suitNum;
+    }
+    static compare(a,b){
+        // sorta per numero e per seme
+        return Card.compareRank(a,b) || Card.compareSuit(a,b);
     }
 }
 
@@ -172,7 +188,7 @@ class Player {
      */
     constructor(name, cards = []) {
         this.name = name;
-        this.hand = cards;
+        this.hand = cards.sort(Card.compare);
     }
     /**
      * aggiunge una carta
@@ -180,6 +196,7 @@ class Player {
      */
     addCard(card) {
         this.hand.push(card);
+        this.hand.sort(Card.compare);
         return this;
     }
 }
@@ -221,5 +238,3 @@ function shuffle(arra1) {
     }
     return arra1;
 }
-
-// todo: sort card fxn
