@@ -38,11 +38,21 @@ function preload() {
 function create() {
     const logo = this.add.image(400, 300, "logo");
     const p = position => position * cardFontSize;
-    createCard(this, new Card(1, 12), p(0), p(0));
-    createCard(this, new Card(0, 1), p(1), p(0));
-    createCard(this, new Card(3, 11), p(1), p(1));
-    createCard(this, new Card(2, 13), p(2), p(1));
-    createCard(this, new Card(2, 13), p(2), p(2));
+
+    const myGame = new Game([
+        new Player("player"),
+        new Player("bot 1"),
+        new Player("bot 2"),
+        new Player("bot 3"),
+    ]);
+    myGame.log();
+
+    let x=0, y=0;
+
+    for (const card of myGame.players[0].hand) {
+        createCard(this, card, p(x), p(y));
+        x++;
+    }
 }
 
 function update() {}
@@ -53,9 +63,9 @@ function createCard(self, card, x, y) {
     const g = self.add.graphics();
     const t = self.add.text(5, 5, card.rank, { fontSize: `${cardFontSize}px`, fill: card.color });
 
-    const w = 100;
-    const h = 140;
-    const r = 10;
+    const w = 100;  // card width
+    const h = 140;  // card height
+    const r = 10;   // corner radius
 
     // todo: mettere questo fuori e chiamarlo
     // invece di riiniziallizzarlo ogni volta
@@ -71,7 +81,7 @@ function createCard(self, card, x, y) {
         }
     });
 
-    g.fillRoundedRect(0, 0, w, h, r); //  32px radius on the corners
+    g.fillRoundedRect(0, 0, w, h, r);
     g.strokeRoundedRect(0, 0, w, h, r);
     c.add([g, t]);
     return c;
@@ -185,15 +195,6 @@ function _makeDeck() {
     }
     return shuffle(deck);
 }
-
-const myGame = new Game([
-    new Player("player"),
-    new Player("bot 1"),
-    new Player("bot 2"),
-    new Player("bot 3"),
-]);
-
-myGame.log();
 
 /**
  * shuffle an array
