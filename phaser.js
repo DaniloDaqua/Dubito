@@ -48,9 +48,9 @@ function create() {
         new Player("bot 2"),
         new Player("bot 3"),
     ]);
-    myGame.log();
+    //myGame.log();
 
-    let x=1, y=14;
+    let x = 1;
 
     for (const card of myGame.players[0].hand) {
         createCard(this, card, pw(x), 450);
@@ -58,10 +58,10 @@ function create() {
     }
 }
 
-function update() {}
+function update() { }
 
 function createCard(self, card, x, y) {
-    
+
     const c = self.add.container(x, y);
     const g = self.add.graphics();
     const t = self.add.text(5, 5, card.rank, { fontSize: `${cardFontSize}px`, fill: card.color });
@@ -114,7 +114,7 @@ class Game {
         }
     }
 
-    log(){
+    log() {
         console.table(this.players);
         this.players.forEach(p => {
             console.table(p.hand);
@@ -221,3 +221,5 @@ function shuffle(arra1) {
     }
     return arra1;
 }
+
+// todo: sort card fxn
