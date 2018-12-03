@@ -40,7 +40,7 @@ function preload() {
 function create() {
     const logo = this.add.image(400, 300, "logo");
     const pw = position => position * cardFontSize * 1.6;
-    const ph = position => position * cardFontSize;
+    const ph = position => position * cardFontSize * 1.3;
 
     const myGame = new Game([
         new Player("player"),
@@ -50,11 +50,33 @@ function create() {
     ]);
     //myGame.log();
 
-    let x = 1;
+    playerAreas = {
+        0: { x: 160, y: 450, vertical: false }, // bottom (player)
+        1: { x: 160, y: 10, vertical: false },  // top
+        2: { x: 10, y: 70, vertical: true },    // left
+        3: { x: 690, y: 70, vertical: true },   // right
+    };
 
-    for (const card of myGame.players[0].hand) {
-        displayCard(this, card, pw(x), 450);
-        x++;
+    for (let i = 0; i < Object.keys(playerAreas).length; i++) {
+        
+        const player = myGame.players[i];
+        const area = playerAreas[i];
+
+        if (!player) {
+            // nel caso fosse un gioco con meno di 4 giocatori
+            continue;
+        }
+
+        let cardPosition = 0;
+
+        for (const card of player.hand) {
+            if (area.vertical) {
+                displayCard(this, card, area.x, area.y + ph(cardPosition));
+            } else {
+                displayCard(this, card, area.x + pw(cardPosition), area.y);
+            }
+            cardPosition++;
+        }
     }
 }
 
@@ -64,12 +86,15 @@ function displayCard(self, card, x, y) {
 
     const c = self.add.container(x, y);
     const g = self.add.graphics();
-    const t = self.add.text(5, 5, card.rank, { fontSize: `${cardFontSize}px`, fill: card.color });
-    const s = self.add.text(5, 5 + cardFontSize, card.getSuit(), { fontSize: `${cardFontSize*.55}px`, fill: card.color });
 
     const w = 100;  // card width
     const h = 140;  // card height
     const r = 10;   // corner radius
+
+    const t = self.add.text(5, 5, card.rank, { fontSize: `${cardFontSize}px`, fill: card.color });
+    const sbl = self.add.text(5, h - cardFontSize, card.getSuit(), { fontSize: `${cardFontSize * .55}px`, fill: card.color });
+    const str = self.add.text(w - cardFontSize, 5, card.getSuit(), { fontSize: `${cardFontSize * .55}px`, fill: card.color });
+    const sbr = self.add.text(w - cardFontSize, h - cardFontSize, card.getSuit(), { fontSize: `${cardFontSize * .55}px`, fill: card.color });
 
     // todo: mettere questo fuori e chiamarlo
     // invece di riiniziallizzarlo ogni volta
@@ -87,7 +112,7 @@ function displayCard(self, card, x, y) {
 
     g.fillRoundedRect(0, 0, w, h, r);
     g.strokeRoundedRect(0, 0, w, h, r);
-    c.add([g, t, s]);
+    c.add([g, t, sbl, str, sbr]);
     return c;
 }
 
@@ -165,7 +190,7 @@ class Card {
         this.suit = suitMap[suitNum];
         this.color = colorMap[this.suit];
     }
-    getSuit(){
+    getSuit() {
         return this.suit.charAt(0).toUpperCase() + this.suit.charAt(1);
     }
     static compareRank(a, b) {
@@ -174,9 +199,9 @@ class Card {
     static compareSuit(a, b) {
         return a.suitNum - b.suitNum;
     }
-    static compare(a,b){
+    static compare(a, b) {
         // sorta per numero e per seme
-        return Card.compareRank(a,b) || Card.compareSuit(a,b);
+        return Card.compareRank(a, b) || Card.compareSuit(a, b);
     }
 }
 
