@@ -47,7 +47,7 @@ function create() {
     ]);
     myGame.log();
 
-    let x=0, y=0;
+    let x=1, y=14;
 
     for (const card of myGame.players[0].hand) {
         createCard(this, card, p(x), p(y));
