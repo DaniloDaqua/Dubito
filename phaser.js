@@ -22,7 +22,6 @@ const config = {
 };
 
 const game = new Phaser.Game(config);
-let graphics;
 
 function preload() {
     this.load.image(
@@ -36,22 +35,45 @@ function preload() {
 }
 
 function create() {
-    //this.add.image(450, 400, "sky");
     const logo = this.add.image(400, 300, "logo");
-    graphics = this.add.graphics();
-
-    function createCard(Card) {
-        graphics.fillStyle(0xffff00);
-        //  32px radius on the corners
-        graphics.fillRoundedRect(32, 32, 150, 200, 10);
-    }
-    scoreText = this.add.text(35, 35, 'A', { fontSize: '32px', fill: '#000' });
-
-    createCard(new Card(1, 3));
+    // 32 px cooincide con il font size (32px)
+    createCard(this, new Card(1, 3), 0, 0);
+    createCard(this, new Card(0, 1), 32, 0);
+    //createCard(this, new Card(2, 13), 0, 32);
+    createCard(this, new Card(3, 11), 32, 32);
 }
 
 function update() {}
 
+function createCard(self, card, x, y) {
+    
+    const c = self.add.container(x, y);
+    const g = self.add.graphics();
+    const t = self.add.text(5, 5, card.rank, { fontSize: '32px', fill: card.color });
+
+    const w = 100;
+    const h = 140;
+    const r = 10;
+
+    // todo: mettere questo fuori e chiamarlo
+    // invece di riiniziallizzarlo ogni volta
+    g.setDefaultStyles({
+        lineStyle: {
+            width: 1,
+            color: 0x232b2b,
+            alpha: 1
+        },
+        fillStyle: {
+            color: 0xffffff,
+            alpha: 1
+        }
+    });
+
+    g.fillRoundedRect(0, 0, w, h, r); //  32px radius on the corners
+    g.strokeRoundedRect(0, 0, w, h, r);
+    c.add([g, t]);
+    return c;
+}
 
 class Game {
     /**
@@ -109,21 +131,21 @@ class Card {
             3: "spades"
         };
         const colorMap = {
-            0: "black",
-            1: "red",
-            2: "red",
-            3: "black"
+            "clubs": "#0E1111",
+            "diamonds": "#EC0D0D",
+            "hearts": "#EC0D0D",
+            "spades": "#0E1111"
         }; //why color??
         const rankMap = {
-            1: "ace",
-            11: "jack",
-            12: "queen",
-            13: "king"
+            1: "A",
+            11: "J",
+            12: "Q",
+            13: "K"
         };
         this.number = number;
         this.rank = rankMap[number] || number.toString();
         this.suit = suitMap[suitNum];
-        this.color = colorMap[suitNum];
+        this.color = colorMap[this.suit];
     }
 }
 
