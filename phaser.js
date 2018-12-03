@@ -1,5 +1,7 @@
 /*jshint esversion: 6 */
 
+// http://phaser.io/tutorials/making-your-first-phaser-3-game
+
 const config = {
     type: Phaser.AUTO,
     width: 800,
@@ -20,6 +22,7 @@ const config = {
 };
 
 const game = new Phaser.Game(config);
+let graphics;
 
 function preload() {
     this.load.image(
@@ -33,26 +36,160 @@ function preload() {
 }
 
 function create() {
-    this.add.image(450, 400, "sky");
-
+    //this.add.image(450, 400, "sky");
     const logo = this.add.image(400, 300, "logo");
+    graphics = this.add.graphics();
 
-    //const particles = this.add.particles("red");
+    function createCard(Card) {
+        graphics.fillStyle(0xffff00);
+        //  32px radius on the corners
+        graphics.fillRoundedRect(32, 32, 150, 200, 10);
+    }
+    scoreText = this.add.text(35, 35, 'A', { fontSize: '32px', fill: '#000' });
 
-    /*const emitter = particles.createEmitter({
-        speed: 5,
-        scale: {
-            start: 1,
-            end: 0
-        },
-        blendMode: "ADD"
-    });*/
-
-    logo.setVelocity(5, 7);
-    logo.setBounce(1, 1);
-    logo.setCollideWorldBounds(false);
-
-    //emitter.startFollow(logo);
+    createCard(new Card(1, 3));
 }
 
 function update() {}
+
+
+class Game {
+    /**
+     * 
+     * @param {Player[]} players 
+     */
+    constructor(players) {
+
+        this.players = players;
+        this.deck = _makeDeck();
+        this.pile = [];
+
+        // dare le carte a i giocatori finchè tutti possono averne 1 ad ogni giro
+        while (this.deck.length >= this.players.length) {
+            this.players.forEach(p => {
+                p.addCard(this.deck.pop());
+            });
+        }
+
+        // nel caso rimangono carte, mettile nel centro
+        while (this.deck.length > 0) {
+            this.pile.push(this.deck.pop());
+        }
+    }
+
+    log(){
+        console.table(this.players);
+        this.players.forEach(p => {
+            console.table(p.hand);
+        });
+        console.table(this.deck);
+        console.table(this.pile);
+    }
+}
+
+/**
+ * Un ogetto che rappresenta una carta
+ * 
+ * @property {number} number numero della carta da 1-13
+ * @property {string} rank 'ace', '2', '6', 'jack', ecc
+ * @property {string} suit 'clubs', 'hearts', ecc
+ * @property {string} color 'red' o 'black'
+ */
+class Card {
+    /**
+     * crea una carta
+     * @param {number} suitNum seme da 0-3
+     * @param {number} number numero da 1-13
+     */
+    constructor(suitNum = 0, number = 0) {
+        const suitMap = {
+            0: "clubs",
+            1: "diamonds",
+            2: "hearts",
+            3: "spades"
+        };
+        const colorMap = {
+            0: "black",
+            1: "red",
+            2: "red",
+            3: "black"
+        }; //why color??
+        const rankMap = {
+            1: "ace",
+            11: "jack",
+            12: "queen",
+            13: "king"
+        };
+        this.number = number;
+        this.rank = rankMap[number] || number.toString();
+        this.suit = suitMap[suitNum];
+        this.color = colorMap[suitNum];
+    }
+}
+
+class Player {
+    /**
+     * 
+     * @param {string} name nome del giocatore
+     * @param {Card[]} cards lista di carte
+     */
+    constructor(name, cards = []) {
+        this.name = name;
+        this.hand = cards;
+    }
+    /**
+     * aggiunge una carta
+     * @param {Card} card carta da aggiungere
+     */
+    addCard(card) {
+        this.hand.push(card);
+        return this;
+    }
+}
+
+/**
+ * Crea un mazzo di carte miste
+ * 
+ * @returns {Card[]}
+ */
+function _makeDeck() {
+    const deck = [];
+    for (let number = 1; number < 14; number++) {
+        for (let suit = 0; suit < 4; suit++) {
+            deck.push(new Card(suit, number));
+        }
+    }
+    return shuffle(deck);
+}
+
+const myGame = new Game([
+    new Player("player"),
+    new Player("bot 1"),
+    new Player("bot 2"),
+    new Player("bot 3"),
+]);
+
+myGame.log();
+
+/**
+ * shuffle an array
+ * @param {*} arra1 
+ */
+function shuffle(arra1) {
+    let ctr = arra1.length;
+    let temp;
+    let index;
+
+    // While there are elements in the array
+    while (ctr > 0) {
+        // Pick a random index
+        index = Math.floor(Math.random() * ctr);
+        // Decrease ctr by 1
+        ctr--;
+        // And swap the last element with it
+        temp = arra1[ctr];
+        arra1[ctr] = arra1[index];
+        arra1[index] = temp;
+    }
+    return arra1;
+}
