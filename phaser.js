@@ -27,18 +27,17 @@ const game = new Phaser.Game(config);
 const cardFontSize = 20;
 
 function preload() {
-    this.load.image(
-        "logo",
-        "https://raw.githubusercontent.com/DaniloDaqua/Dubito/77dc0cb14868dd96c88da168f890bbbaf636df39/img/966aa029b7f3b7b1b0669b6f6f4a6294--food-spain-drawing-cartoons.jpg"
-    );
-
-    this.load.setBaseURL("http://labs.phaser.io");
-    this.load.image("sky", "assets/skies/space3.png");
-    this.load.image("red", "assets/particles/red.png");
+    this.load.setBaseURL("https://raw.githubusercontent.com/DaniloDaqua/Dubito/master/img");
+    this.load.image("logo","bull.png");
+    this.load.image("heartsImage","heart.png");
+    this.load.image("clubsImage","clubs.png");
+    this.load.image("spadesImage","spades.png");
+    this.load.image("diamondsImage","diamonds.png");
 }
 
 function create() {
     const logo = this.add.image(400, 300, "logo");
+    //const hImage = this.add.image();
     const pw = position => position * cardFontSize * 1.6;
     const ph = position => position * cardFontSize * 1.3;
 
