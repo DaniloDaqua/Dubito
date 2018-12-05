@@ -25,21 +25,44 @@ const config = {
 
 const game = new Phaser.Game(config);
 const cardFontSize = 20;
+const cardStyleFront = {
+    lineStyle: {
+        width: 1,
+        color: 0x232b2b,
+        alpha: 1
+    },
+    fillStyle: {
+        color: 0xffffff,
+        alpha: 1
+    }
+};
+const cardStyleBack = {
+    lineStyle: {
+        width: 1,
+        color: 0x232b2b,
+        alpha: 1
+    },
+    fillStyle: {
+        color: 0x5F021F,
+        alpha: 1
+    }
+};
 
 function preload() {
     this.load.setBaseURL("https://raw.githubusercontent.com/DaniloDaqua/Dubito/master/img");
     this.load.image("logo","bull.png");
-    this.load.image("heartsImage","heart.png");
-    this.load.image("clubsImage","clubs.png");
-    this.load.image("spadesImage","spades.png");
-    this.load.image("diamondsImage","diamonds.png");
+    this.load.image("hearts","heart.png");
+    this.load.image("clubs","clubs.png");
+    this.load.image("spades","spades.png");
+    this.load.image("diamonds","diamonds.png");
 }
 
 function create() {
-    const logo = this.add.image(400, 300, "logo");
-    //const hImage = this.add.image();
+    const logo = this.add.sprite(400, 300, "logo");
+    logo.setScale(0.4);
     const pw = position => position * cardFontSize * 1.6;
     const ph = position => position * cardFontSize * 1.3;
+    const isPlayer = playerNumber => playerNumber === 0;
 
     const myGame = new Game([
         new Player("player"),
@@ -70,9 +93,9 @@ function create() {
 
         for (const card of player.hand) {
             if (area.vertical) {
-                displayCard(this, card, area.x, area.y + ph(cardPosition));
+                displayCard(this, card, area.x, area.y + ph(cardPosition), isPlayer(i));
             } else {
-                displayCard(this, card, area.x + pw(cardPosition), area.y);
+                displayCard(this, card, area.x + pw(cardPosition), area.y, isPlayer(i));
             }
             cardPosition++;
         }
@@ -81,38 +104,33 @@ function create() {
 
 function update() { }
 
-function displayCard(self, card, x, y) {
+function displayCard(self, card, x, y, showCard=false) {
 
-    const c = self.add.container(x, y);
-    const g = self.add.graphics();
+    const container = self.add.container(x, y);
+    const graphics = self.add.graphics();
 
     const w = 100;  // card width
     const h = 140;  // card height
     const r = 10;   // corner radius
 
+    if (!showCard) {
+        graphics.setDefaultStyles(cardStyleBack);
+        graphics.fillRoundedRect(0, 0, w, h, r);
+        graphics.strokeRoundedRect(0, 0, w, h, r);
+        return container.add(graphics);//zona da modficare di diertro di isaac
+    }
+
+    const imgPad = 14;
+
     const t = self.add.text(5, 5, card.rank, { fontSize: `${cardFontSize}px`, fill: card.color });
-    const sbl = self.add.text(5, h - cardFontSize, card.getSuit(), { fontSize: `${cardFontSize * .55}px`, fill: card.color });
-    const str = self.add.text(w - cardFontSize, 5, card.getSuit(), { fontSize: `${cardFontSize * .55}px`, fill: card.color });
-    const sbr = self.add.text(w - cardFontSize, h - cardFontSize, card.getSuit(), { fontSize: `${cardFontSize * .55}px`, fill: card.color });
+    const sbl = self.add.sprite(imgPad, h - imgPad, card.suit).setScale(.02);
+    const str = self.add.sprite(w - imgPad, imgPad, card.suit).setScale(.02);
+    const sbr = self.add.sprite(w - imgPad, h - imgPad, card.suit).setScale(.02);
 
-    // todo: mettere questo fuori e chiamarlo
-    // invece di riiniziallizzarlo ogni volta
-    g.setDefaultStyles({
-        lineStyle: {
-            width: 1,
-            color: 0x232b2b,
-            alpha: 1
-        },
-        fillStyle: {
-            color: 0xffffff,
-            alpha: 1
-        }
-    });
-
-    g.fillRoundedRect(0, 0, w, h, r);
-    g.strokeRoundedRect(0, 0, w, h, r);
-    c.add([g, t, sbl, str, sbr]);
-    return c;
+    graphics.setDefaultStyles(cardStyleFront);
+    graphics.fillRoundedRect(0, 0, w, h, r);
+    graphics.strokeRoundedRect(0, 0, w, h, r);
+    return container.add([graphics, t, sbl, str, sbr]);
 }
 
 class Game {
