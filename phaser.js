@@ -106,18 +106,30 @@ function update() { }
 
 function displayCard(self, card, x, y, showCard=false) {
 
-    const container = self.add.container(x, y);
-    const graphics = self.add.graphics();
-
     const w = 100;  // card width
     const h = 140;  // card height
     const r = 10;   // corner radius
 
+    const hitArea = new Phaser.Geom.Rectangle(0,0,w,h)
+    const container = self.add.container(x, y);
+    const cardGraphic = self.add.graphics();
+    const selectedGraphic = self.add.graphics();
+
+    selectedGraphic.fillStyle('0xffff00');
+    selectedGraphic.fillRoundedRect(0, 0, w, h, r);
+    selectedGraphic.setAlpha(0.01);
+
+    selectedGraphic.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+    selectedGraphic.on('pointerup', function () {
+        //this.swap(this.first, this.last);
+        this.setAlpha(0.3);
+    });
+
     if (!showCard) {
-        graphics.setDefaultStyles(cardStyleBack);
-        graphics.fillRoundedRect(0, 0, w, h, r);
-        graphics.strokeRoundedRect(0, 0, w, h, r);
-        return container.add(graphics);//zona da modficare di diertro di isaac
+        cardGraphic.setDefaultStyles(cardStyleBack);
+        cardGraphic.fillRoundedRect(0, 0, w, h, r);
+        cardGraphic.strokeRoundedRect(0, 0, w, h, r);
+        return container.add(cardGraphic);//zona da modficare di diertro di isaac
     }
 
     const imgPad = 14;
@@ -127,10 +139,10 @@ function displayCard(self, card, x, y, showCard=false) {
     const str = self.add.sprite(w - imgPad, imgPad, card.suit).setScale(.02);
     const sbr = self.add.sprite(w - imgPad, h - imgPad, card.suit).setScale(.02);
 
-    graphics.setDefaultStyles(cardStyleFront);
-    graphics.fillRoundedRect(0, 0, w, h, r);
-    graphics.strokeRoundedRect(0, 0, w, h, r);
-    return container.add([graphics, t, sbl, str, sbr]);
+    cardGraphic.setDefaultStyles(cardStyleFront);
+    cardGraphic.fillRoundedRect(0, 0, w, h, r);
+    cardGraphic.strokeRoundedRect(0, 0, w, h, r);
+    return container.add([cardGraphic, t, sbl, str, sbr, selectedGraphic]);
 }
 
 class Game {
@@ -150,7 +162,6 @@ class Game {
                 p.addCard(this.deck.pop());
             });
         }
-
         // nel caso rimangono carte, mettile nel centro
         while (this.deck.length > 0) {
             this.pile.push(this.deck.pop());
