@@ -57,6 +57,8 @@ function preload() {
     this.load.image("diamonds","diamonds.png");
 }
 
+const cardEvidence = [];
+
 function create() {
     const logo = this.add.sprite(400, 300, "logo");
     logo.setScale(0.4);
@@ -120,10 +122,23 @@ function displayCard(self, card, x, y, showCard=false) {
     selectedGraphic.setAlpha(0.01);
 
     selectedGraphic.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+    
     selectedGraphic.on('pointerup', function () {
-        //this.swap(this.first, this.last);
-        this.setAlpha(0.3);
+        if (this.cardSelected)  {
+            this.setAlpha(0.01);
+            this.cardSelected = false;
+            cardEvidence.filter(function(card) {
+                return
+            })
+
+        } else {
+            this.cardSelected = true;
+            this.setAlpha(0.3);
+            cardEvidence.push(card);
+        }
+        console.log(cardEvidence);
     });
+   
 
     if (!showCard) {
         cardGraphic.setDefaultStyles(cardStyleBack);
