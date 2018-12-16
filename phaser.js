@@ -2,7 +2,7 @@
 
 // http://phaser.io/tutorials/making-your-first-phaser-3-game
 
-import card from './card.js';
+import MyCard from './card.js';
 
 const config = {
     type: Phaser.AUTO,
@@ -74,7 +74,7 @@ function create() {
     ]);
     //myGame.log();
 
-    playerAreas = {
+    const playerAreas = {
         0: { x: 160, y: 450, vertical: false }, // bottom (player)
         1: { x: 160, y: 10, vertical: false },  // top
         2: { x: 10, y: 70, vertical: true },    // left
