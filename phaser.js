@@ -2,7 +2,7 @@
 
 // http://phaser.io/tutorials/making-your-first-phaser-3-game
 
-// todo: use require() to load other js split into multiple files
+import MyCard from 'card'
 
 const config = {
     type: Phaser.AUTO,
@@ -50,11 +50,11 @@ const cardStyleBack = {
 
 function preload() {
     this.load.setBaseURL("https://raw.githubusercontent.com/DaniloDaqua/Dubito/master/img");
-    this.load.image("logo","bull.png");
-    this.load.image("hearts","heart.png");
-    this.load.image("clubs","clubs.png");
-    this.load.image("spades","spades.png");
-    this.load.image("diamonds","diamonds.png");
+    this.load.image("logo", "bull.png");
+    this.load.image("hearts", "heart.png");
+    this.load.image("clubs", "clubs.png");
+    this.load.image("spades", "spades.png");
+    this.load.image("diamonds", "diamonds.png");
 }
 
 let cardEvidence = [];
@@ -82,7 +82,7 @@ function create() {
     };
 
     for (let i = 0; i < Object.keys(playerAreas).length; i++) {
-        
+
         const player = myGame.players[i];
         const area = playerAreas[i];
 
@@ -106,13 +106,13 @@ function create() {
 
 function update() { }
 
-function displayCard(self, card, x, y, showCard=false) {
+function displayCard(self, card, x, y, showCard = false) {
 
     const w = 100;  // card width
     const h = 140;  // card height
     const r = 10;   // corner radius
 
-    const hitArea = new Phaser.Geom.Rectangle(0,0,w,h)
+    const hitArea = new Phaser.Geom.Rectangle(0, 0, w, h)
     const container = self.add.container(x, y);
     const cardGraphic = self.add.graphics();
     const selectedGraphic = self.add.graphics();
@@ -122,9 +122,9 @@ function displayCard(self, card, x, y, showCard=false) {
     selectedGraphic.setAlpha(0.01);
 
     selectedGraphic.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
-    
+
     selectedGraphic.on('pointerup', function () {
-        if (this.cardSelected)  {
+        if (this.cardSelected) {
             this.setAlpha(0.01);
             this.cardSelected = false;
             cardEvidence = cardEvidence.filter(e => e !== card)
@@ -136,7 +136,7 @@ function displayCard(self, card, x, y, showCard=false) {
         }
         console.log(cardEvidence.map(a => JSON.stringify(a)));
     });
-   
+
 
     if (!showCard) {
         cardGraphic.setDefaultStyles(cardStyleBack);
@@ -303,98 +303,4 @@ function shuffle(arra1) {
         arra1[index] = temp;
     }
     return arra1;
-}
-
-class MyCard extends Phaser.GameObjects.Container {
-    constructor (scene, x = 0, y = 0, suitNum = 0, number = 0) {
-         super (scene, x, y);
-         const suitMap = {
-            0: "clubs",
-            1: "diamonds",
-            2: "hearts",
-            3: "spades"
-        };
-        const colorMap = {
-            "clubs": "#0E1111",
-            "diamonds": "#EC0D0D",
-            "hearts": "#EC0D0D",
-            "spades": "#0E1111"
-        }; //why color??
-        const rankMap = {
-            1: "A",
-            11: "J",
-            12: "Q",
-            13: "K"
-        };
-        this.number = number;
-        this.suitNum = suitNum;
-        this.rank = rankMap[number] || number.toString();
-        this.suit = suitMap[suitNum];
-        this.color = colorMap[this.suit];
-        
-        this.x = x;
-        this.y = y;
-        this.w = 100;  // card width
-        this.h = 140;  // card height
-        this.r = 10;   // corner radius
-
-    }
-
-    showCard(){
-        // reset container
-        this.removeAll(destroyChild=true);
-
-        const w = this.w;  // card width
-        const h = this.h;  // card height
-        const r = this.r;  // corner radius
-        
-        // draw new card
-        const cardGraphic = self.add.graphics();
-        const hitArea = new Phaser.Geom.Rectangle(0,0,w,h);
-
-        const imgPad = 14;
-
-        const t = self.add.text(5, 5, card.rank, { fontSize: `${cardFontSize}px`, fill: card.color });
-        const sbl = self.add.sprite(imgPad, h - imgPad, card.suit).setScale(.02);
-        const str = self.add.sprite(w - imgPad, imgPad, card.suit).setScale(.02);
-        const sbr = self.add.sprite(w - imgPad, h - imgPad, card.suit).setScale(.02);
-
-        cardGraphic.setDefaultStyles(cardStyleFront);
-        cardGraphic.fillRoundedRect(0, 0, w, h, r);
-        cardGraphic.strokeRoundedRect(0, 0, w, h, r);
-        return this.add([cardGraphic, t, sbl, str, sbr]);
-    }
-
-    hideCard(){
-        // reset container
-        this.removeAll(destroyChild=true);
-
-        // TODO
-        const w = this.w;  // card width
-        const h = this.h;  // card height
-        const r = this.r;   // corner radius
-
-        const hitArea = new Phaser.Geom.Rectangle(0,0,w,h)
-        const cardGraphic = scene.add.graphics();
-
-        cardGraphic.setDefaultStyles(cardStyleBack);
-        cardGraphic.fillRoundedRect(0, 0, w, h, r);
-        cardGraphic.strokeRoundedRect(0, 0, w, h, r);
-        return container.add(cardGraphic);
-    }
-
-    getSuit() {
-        return this.suit.charAt(0).toUpperCase() + this.suit.charAt(1);
-    }
-    static compareRank(a, b) {
-        return a.number - b.number;
-    }
-    static compareSuit(a, b) {
-        return a.suitNum - b.suitNum;
-    }
-    static compare(a, b) {
-        // sorta per numero e per seme
-        return Card.compareRank(a, b) || Card.compareSuit(a, b);
-    }
-
 }
