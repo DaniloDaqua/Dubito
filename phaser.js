@@ -2,7 +2,7 @@
 
 // http://phaser.io/tutorials/making-your-first-phaser-3-game
 
-import MyCard from 'card'
+import card from './card.js';
 
 const config = {
     type: Phaser.AUTO,
