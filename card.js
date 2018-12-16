@@ -1,3 +1,5 @@
+
+
 /**
  * Un ogetto che rappresenta una carta
  * 
@@ -7,13 +9,17 @@
  * @property {string} suit 'clubs', 'hearts', ecc
  * @property {string} color '#EC0D0D' o '#0E1111'
  */
-export default class Card {
+export default class Card extends Phaser.GameObjects.Image {
     /**
      * crea una carta
      * @param {number} suitNum seme da 0-3
      * @param {number} number numero da 1-13
      */
     constructor(suitNum = 0, number = 0) {
+        
+        super(scene, x, y, texture, frame);
+        scene.add.existing(this);
+
         const suitMap = {
             0: "clubs",
             1: "diamonds",
@@ -25,7 +31,7 @@ export default class Card {
             "diamonds": "#EC0D0D",
             "hearts": "#EC0D0D",
             "spades": "#0E1111"
-        }; //why color??
+        };
         const rankMap = {
             1: "A",
             11: "J",

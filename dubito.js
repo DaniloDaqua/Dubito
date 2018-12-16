@@ -51,6 +51,12 @@ const cardStyleBack = {
 
 function preload() {
     this.load.setBaseURL("img/");
+    this.load.spritesheet('cards', 'cards.png', {
+        frameWidth: 70,
+        frameHeight: 95,
+        spacing: 2,
+        margin: 0,
+    });
     this.load.image("logo", "bull.png");
     this.load.image("hearts", "heart.png");
     this.load.image("clubs", "clubs.png");
@@ -61,6 +67,9 @@ function preload() {
 let cardEvidence = [];
 
 function create() {
+    this.add.image(50, 50, 'cards', 0);
+
+    this.add.image(100, 100, 'cards', 12);
     const logo = this.add.sprite(400, 300, "logo");
     logo.setScale(0.4);
     const pw = position => position * cardFontSize * 1.6;
@@ -73,7 +82,6 @@ function create() {
         new Player("bot 2"),
         new Player("bot 3"),
     ]);
-    //myGame.log();
 
     const playerAreas = {
         0: { x: 160, y: 450, vertical: false }, // bottom (player)
