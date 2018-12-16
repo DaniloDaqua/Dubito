@@ -49,7 +49,7 @@ const cardStyleBack = {
 };
 
 function preload() {
-    this.load.setBaseURL("https://raw.githubusercontent.com/DaniloDaqua/Dubito/master/img");
+    this.load.setBaseURL("img/");
     this.load.image("logo", "bull.png");
     this.load.image("hearts", "heart.png");
     this.load.image("clubs", "clubs.png");
