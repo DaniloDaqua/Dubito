@@ -80,23 +80,23 @@ export default class GameScene extends Phaser.Scene {
 
             for (const card of player.hand) {
                 if (area.vertical) {
-                    card.setPosition(area.x, area.y + ph(cardPosition));
+                    card.setPosition(area.x + 35, area.y + ph(cardPosition));
                 } else {
-                    card.setPosition(area.x + pw(cardPosition), area.y);
+                    card.setPosition(area.x + pw(cardPosition), area.y + 45);
                 }
                 cardPosition++;
             }
         }
 
         // Help text that has a "fixed" position on the screen
-        this.add
+        /* this.add
             .text(16, 16, "Arrow keys or WASD to move & jump", {
                 font: "18px monospace",
                 fill: "#000000",
                 padding: { x: 20, y: 10 },
                 backgroundColor: "#ffffff"
             })
-            .setScrollFactor(0);
+            .setScrollFactor(0); */
     }
 
     update(time, delta) {
