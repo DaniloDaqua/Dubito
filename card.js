@@ -35,8 +35,6 @@ export default class Card {
         };
 
         this.scene = scene;
-        this.x = x;
-        this.y = y;
         this.number = number;
         this.suitNum = suitNum;
         this.rank = rankMap[number] || number.toString();
@@ -45,13 +43,13 @@ export default class Card {
 
         const spriteSheetFrame = (number - 1) + (suitNum * 14);
         this.image = scene.add.image(x, y, 'cards', spriteSheetFrame);
+        this.image.setInteractive();
+        scene.input.setDraggable(this.image);
     }
     getSuit() {
         return this.suit.charAt(0).toUpperCase() + this.suit.charAt(1);
     }
     setPosition(x,y){
-        this.x = x;
-        this.y = y;
         this.image.setPosition(x,y);
     }
     static compareRank(a, b) {

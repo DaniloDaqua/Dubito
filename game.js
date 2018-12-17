@@ -57,8 +57,6 @@ export default class GameScene extends Phaser.Scene {
         const ph = position => position * cardSpacing * 1.3;
         const isPlayer = playerNumber => playerNumber === 0;
 
-        console.log("dio merda");
-
         const playerAreas = {
             0: { x: 160, y: 450, vertical: false }, // bottom (player)
             1: { x: 160, y: 10, vertical: false },  // top
@@ -87,6 +85,71 @@ export default class GameScene extends Phaser.Scene {
                 cardPosition++;
             }
         }
+
+        //  A drop zone
+        const zone = this.add.zone(400, 300, 300, 300).setRectangleDropZone(300, 300);
+
+        //  Just a visual display of the drop zone
+        const graphics = this.add.graphics();
+        graphics.lineStyle(2, 0xffff00);
+        graphics.strokeRect(zone.x - zone.input.hitArea.width / 2, zone.y - zone.input.hitArea.height / 2, zone.input.hitArea.width, zone.input.hitArea.height);
+
+        // porta la carta in evidenza
+        this.input.on('dragstart', function (pointer, gameObject) {
+
+            this.children.bringToTop(gameObject);
+
+        }, this);
+
+        // abilita lo spostamento
+        this.input.on('drag', function (pointer, gameObject, dragX, dragY) {
+
+            gameObject.x = dragX;
+            gameObject.y = dragY;
+
+        });
+
+        // spostamento nella zona
+        this.input.on('dragenter', function (pointer, gameObject, dropZone) {
+
+            graphics.clear();
+            graphics.lineStyle(2, 0x00ffff);
+            graphics.strokeRect(zone.x - zone.input.hitArea.width / 2, zone.y - zone.input.hitArea.height / 2, zone.input.hitArea.width, zone.input.hitArea.height);
+
+        });
+
+        // spostamento dalla zona
+        this.input.on('dragleave', function (pointer, gameObject, dropZone) {
+
+            graphics.clear();
+            graphics.lineStyle(2, 0xffff00);
+            graphics.strokeRect(zone.x - zone.input.hitArea.width / 2, zone.y - zone.input.hitArea.height / 2, zone.input.hitArea.width, zone.input.hitArea.height);
+
+        });
+
+        // lasciare la carta nella zona
+        this.input.on('drop', function (pointer, gameObject, dropZone) {
+
+            gameObject.x = dropZone.x;
+            gameObject.y = dropZone.y;
+
+            gameObject.input.enabled = false;
+
+        });
+
+        // reset position
+        this.input.on('dragend', function (pointer, gameObject, dropped) {
+
+            if (!dropped) {
+                gameObject.x = gameObject.input.dragStartX;
+                gameObject.y = gameObject.input.dragStartY;
+            }
+
+            graphics.clear();
+            graphics.lineStyle(2, 0xffff00);
+            graphics.strokeRect(zone.x - zone.input.hitArea.width / 2, zone.y - zone.input.hitArea.height / 2, zone.input.hitArea.width, zone.input.hitArea.height);
+
+        });
 
         // Help text that has a "fixed" position on the screen
         /* this.add
