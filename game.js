@@ -7,6 +7,7 @@ export default class GameScene extends Phaser.Scene {
         this.players = [];
         this.deck = [];
         this.pile = [];
+        this.playerTurn = 0;
     }
     preload() {
         this.load.setBaseURL("assets/img/");
@@ -26,11 +27,18 @@ export default class GameScene extends Phaser.Scene {
     create() {
         this.add.sprite(400, 300, "logo").setScale(0.4);
 
+        const playerData = {
+            0: { num: 0, x: 160, y: 450, vertical: false, name: 'Player' }, // bottom (player)
+            1: { num: 1, x: 10, y: 70, vertical: true, name: 'Pippo' },     // left
+            2: { num: 2, x: 160, y: 10, vertical: false, name: 'Pluto' },   // top
+            3: { num: 3, x: 690, y: 70, vertical: true, name: 'Paperino' },    // right
+        };
+
         this.players = [
-            new Player("player"),
-            new Player("bot 1"),
-            new Player("bot 2"),
-            new Player("bot 3"),
+            new Player(playerData[0], this),
+            new Player(playerData[1], this),
+            new Player(playerData[2], this),
+            new Player(playerData[3], this),
         ];
 
         this.deck = [];
@@ -52,39 +60,15 @@ export default class GameScene extends Phaser.Scene {
             this.pile.push(this.deck.pop());
         }
 
-        const cardSpacing = 20;
-        const pw = position => position * cardSpacing * 1.6;
-        const ph = position => position * cardSpacing * 1.3;
-        const isPlayer = playerNumber => playerNumber === 0;
+        this.players[this.playerTurn].enableCards();
 
-        const playerAreas = {
-            0: { x: 160, y: 450, vertical: false }, // bottom (player)
-            1: { x: 160, y: 10, vertical: false },  // top
-            2: { x: 10, y: 70, vertical: true },    // left
-            3: { x: 690, y: 70, vertical: true },   // right
-        };
-
-        for (let i = 0; i < Object.keys(playerAreas).length; i++) {
-
-            const player = this.players[i];
-            const area = playerAreas[i];
-
-            if (!player) {
-                // nel caso fosse un gioco con meno di 4 giocatori
-                continue;
-            }
-
-            let cardPosition = 1;
-
-            for (const card of player.hand) {
-                if (area.vertical) {
-                    card.setPosition(area.x + 35, area.y + ph(cardPosition));
-                } else {
-                    card.setPosition(area.x + pw(cardPosition), area.y + 45);
-                }
-                cardPosition++;
-            }
-        }
+        this.infoText = this.add
+            .text(13, 550, `${this.players[this.playerTurn].name} turn.`, {
+                font: "18px monospace",
+                fill: "#000000",
+                padding: { x: 20, y: 10 },
+                backgroundColor: "#ffffff"
+            })
 
         //  A drop zone
         const zone = this.add.zone(400, 300, 300, 300).setRectangleDropZone(300, 300);
@@ -151,25 +135,21 @@ export default class GameScene extends Phaser.Scene {
 
         });
 
-        // Help text that has a "fixed" position on the screen
-        /* this.add
-            .text(16, 16, "Arrow keys or WASD to move & jump", {
-                font: "18px monospace",
-                fill: "#000000",
-                padding: { x: 20, y: 10 },
-                backgroundColor: "#ffffff"
-            })
-            .setScrollFactor(0); */
     }
 
     update(time, delta) {
-        // Allow the player to respond to key presses and move itself
-        /* this.player.update();
 
-        if (this.player.sprite.y > this.groundLayer.height) {
-            this.player.destroy();
-            this.scene.restart();
-        } */
+        if (this.players[this.playerTurn].update()) {
+            this.players[this.playerTurn].disableCards();
+            this.playerTurn += 1;
+            if (this.playerTurn >= this.players.length) {
+                this.playerTurn = 0;
+            }
+            this.infoText.setText(`${this.players[this.playerTurn].name} turn.`);
+            //console.log(this.playerTurn);
+            this.players[this.playerTurn].enableCards();
+        }
+
     }
 }
 
