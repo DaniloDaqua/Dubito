@@ -1,3 +1,5 @@
+/*jshint esversion: 6 */
+
 import Card from './card.js';
 
 export default class Player {
@@ -27,6 +29,15 @@ export default class Player {
      */
     addCard(card) {
         this.hand.push(card);
+        this.orderCards();
+        return this;
+    }
+    removeCard(card) {
+        this.hand = this.hand.filter(c => c.cardId != card.cardId);
+        this.orderCards();
+        return this;
+    }
+    orderCards() {
         this.hand.sort(Card.compare);
 
         const cardSpacing = 20;

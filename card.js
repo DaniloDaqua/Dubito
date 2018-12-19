@@ -24,21 +24,23 @@ export default class Card extends Phaser.GameObjects.Image {
 
         // settare gli altri attributi riguardo che carta è
         const rankMap = {
-            1: "A",
-            11: "J",
-            12: "Q",
-            13: "K"
+            1: "Ace",
+            11: "Jack",
+            12: "Queen",
+            13: "King"
         };
         const suitMap = {
-            0: "clubs",
-            1: "spades",
-            2: "hearts",
-            3: "diamonds"
+            0: "Clubs",
+            1: "Spades",
+            2: "Hearts",
+            3: "Diamonds"
         };
+    
         this.rankNum = rankNum;
         this.suitNum = suitNum;
         this.rank = rankMap[rankNum] || rankNum.toString();
         this.suit = suitMap[suitNum];
+        this.cardId = `${this.rank}_${this.suit}`;
 
     }
     static compareRank(a, b) {

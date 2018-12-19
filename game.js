@@ -6,8 +6,10 @@ export default class GameScene extends Phaser.Scene {
         super(config);
         this.players = [];
         this.deck = [];
-        this.pile = [];
+        this.tableCards = [];
+        this.tableCardsTemp = [];
         this.playerTurn = 0;
+        this.activePlayer = null;
     }
     preload() {
         this.load.setBaseURL("assets/img/");
@@ -60,7 +62,8 @@ export default class GameScene extends Phaser.Scene {
             this.pile.push(this.deck.pop());
         }
 
-        this.players[this.playerTurn].enableCards();
+        this.activePlayer = this.players[this.playerTurn];
+        this.activePlayer.enableCards();
 
         this.infoText = this.add
             .text(13, 550, `${this.players[this.playerTurn].name} turn.`, {
@@ -114,10 +117,18 @@ export default class GameScene extends Phaser.Scene {
         // lasciare la carta nella zona
         this.input.on('drop', function (pointer, gameObject, dropZone) {
 
-            gameObject.x = dropZone.x;
-            gameObject.y = dropZone.y;
+            const card = gameObject;
 
-            gameObject.input.enabled = false;
+            card.x = dropZone.x;
+            card.y = dropZone.y;
+
+            card.input.enabled = false;
+
+            const activePlayer = card.scene.activePlayer;
+            const tableCardsTemp = card.scene.tableCardsTemp;
+            
+            tableCardsTemp.push(card);
+            activePlayer.removeCard(card);
 
         });
 
@@ -145,7 +156,8 @@ export default class GameScene extends Phaser.Scene {
             if (this.playerTurn >= this.players.length) {
                 this.playerTurn = 0;
             }
-            this.infoText.setText(`${this.players[this.playerTurn].name} turn.`);
+            this.activePlayer = this.players[this.playerTurn];
+            this.infoText.setText(`${this.activePlayer.name} turn.`);
             //console.log(this.playerTurn);
             this.players[this.playerTurn].enableCards();
         }
