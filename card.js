@@ -17,8 +17,10 @@ export default class Card extends Phaser.GameObjects.Image {
 
         // calcola la frame da usare dalla spritesheet 'cards'
         const spriteSheetFrame = (rankNum - 1) + (suitNum * 14);
+
         // creare la carta
         super(scene, x, y, 'cards', spriteSheetFrame);
+
         // aggiungere questa carta alla scene
         scene.add.existing(this);
 
@@ -41,10 +43,12 @@ export default class Card extends Phaser.GameObjects.Image {
         this.rank = rankMap[rankNum] || rankNum.toString();
         this.suit = suitMap[suitNum];
         this.cardId = `${this.rank}_${this.suit}`;
+        this.spriteSheetFrame = spriteSheetFrame;
+        this.spriteSheetCoverFrame = 13;
 
     }
     static compareRank(a, b) {
-        return a.number - b.number;
+        return a.rankNum - b.rankNum;
     }
     static compareSuit(a, b) {
         return a.suitNum - b.suitNum;
@@ -61,5 +65,11 @@ export default class Card extends Phaser.GameObjects.Image {
     disable() {
         // rendere questa carta interaggibile
         this.disableInteractive();
+    }
+    show(){
+        this.setFrame(this.spriteSheetFrame);
+    }
+    hide(){
+        this.setFrame(this.spriteSheetCoverFrame);
     }
 }

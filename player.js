@@ -16,6 +16,7 @@ export default class Player {
         this.zoneY = playerData['y'];
         this.zoneVertical = playerData['vertical'];
         this.hand = [];
+        this.isThePlayer = !this.num;
 
         // Track the arrow keys & WASD
         const { SPACE } = Phaser.Input.Keyboard.KeyCodes;
@@ -29,11 +30,19 @@ export default class Player {
      */
     addCard(card) {
         this.hand.push(card);
+        const sameRank = this.hand.filter(c => c.rank === card.rank);
+        if (sameRank.length >= 4) {
+            this.hand = this.hand.filter(c => c.rank !== card.rank);
+            sameRank.map(c => c.destroy());
+        }
         this.orderCards();
         return this;
     }
+    addCards(cards) {
+        cards.forEach(c => this.addCard(c));
+    }
     removeCard(card) {
-        this.hand = this.hand.filter(c => c.cardId != card.cardId);
+        this.hand = this.hand.filter(c => c.cardId !== card.cardId);
         this.orderCards();
         return this;
     }
@@ -57,6 +66,12 @@ export default class Player {
             cardPosition++;
         }
 
+        if (this.isThePlayer) {
+            this.hand.map(c => c.show());
+        } else {
+            this.hand.map(c => c.hide());
+        }
+
         return this;
     }
     enableCards() {
@@ -67,13 +82,31 @@ export default class Player {
         this.hand.map(c => c.disable());
         return this;
     }
-    update() {
-        const keys = this.keys;
+    passTurn() {
+        if (this.isThePlayer) {
+            const keys = this.keys;
+            if (Phaser.Input.Keyboard.JustDown(keys.space)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        // bot logica
+        return true;
 
-        if (Phaser.Input.Keyboard.JustDown(keys.space)) {
+    }
+    botSelectCards() {
+        const randCard = this.hand[Math.floor(Math.random() * this.hand.length)];
+    }
+    botDubitare() {
+        if (this.scene.tableCardsTemp.length >= 4) {
             return true;
+        } else if (this.scene.tableCardsTemp.length >= 3) {
+            return Math.random() <= .75;
+        } else if (this.scene.tableCardsTemp.length >= 2) {
+            return Math.random() <= .50;
         } else {
-            return false;
+            return Math.random() <= .25;
         }
     }
 }

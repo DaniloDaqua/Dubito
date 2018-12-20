@@ -10,6 +10,7 @@ export default class GameScene extends Phaser.Scene {
         this.tableCardsTemp = [];
         this.playerTurn = 0;
         this.activePlayer = null;
+        this.currentRank = 1;
     }
     preload() {
         this.load.setBaseURL("assets/img/");
@@ -126,8 +127,9 @@ export default class GameScene extends Phaser.Scene {
 
             const activePlayer = card.scene.activePlayer;
             const tableCardsTemp = card.scene.tableCardsTemp;
-            
+
             tableCardsTemp.push(card);
+            tableCardsTemp.map(c => c.hide());
             activePlayer.removeCard(card);
 
         });
@@ -148,20 +150,126 @@ export default class GameScene extends Phaser.Scene {
 
     }
 
+    nextPlayer() {
+        let playerNum = this.playerTurn + 1;
+        if (playerNum >= this.players.length) {
+            playerNum = 0;
+        }
+        return this.players[playerNum];
+    }
+
+    prevPlayer() {
+        let playerNum = this.playerTurn - 1;
+        if (playerNum < 0) {
+            playerNum = this.players.length - 1;
+        }
+        return this.players[playerNum];
+    }
+    logGameState() {
+        console.log({
+            activePlayer: this.activePlayer,
+            playerTurn: this.playerTurn,
+            tableCardsTemp: this.tableCardsTemp,
+            tableCards: this.tableCards,
+            currentRank: this.currentRank,
+        })
+    }
+    checkDubito() {
+        // controlla se le carte precedenti sono sbagliate
+        const mentito = !!this.tableCardsTemp.filter(c => c.rankNum !== this.currentRank);
+        this.tableCards.push(...this.tableCardsTemp);
+
+        if (mentito) {
+            // player precedente ha mentito
+            console.log("if");
+            this.logGameState();
+            this.prevPlayer().addCards(this.tableCards);
+        } else {
+            // player attivo si prende le carte
+            console.log("else");
+            this.activePlayer.addCards(this.tableCards);
+        }
+        this.tableCards = [];
+        this.tableCardsTemp = [];
+
+        return mentito;
+    }
+
     update(time, delta) {
 
-        if (this.players[this.playerTurn].update()) {
-            this.players[this.playerTurn].disableCards();
-            this.playerTurn += 1;
-            if (this.playerTurn >= this.players.length) {
-                this.playerTurn = 0;
+        if (this.activePlayer.isThePlayer) {
+            // il giocatore
+            this.activePlayer.enableCards();
+
+            if (this.activePlayer.passTurn()) {
+                this.activePlayer.disableCards();
+                this.activePlayer = this.nextPlayer();
+                this.playerTurn = this.activePlayer.num;
             }
-            this.activePlayer = this.players[this.playerTurn];
-            this.infoText.setText(`${this.activePlayer.name} turn.`);
-            //console.log(this.playerTurn);
-            this.players[this.playerTurn].enableCards();
+        } else {
+            // i bot
+
+            if (this.activePlayer.botDubitare()) {
+                console.log(`${this.activePlayer.name} ha dubitato`);
+                this.checkDubito();
+            } else {
+                this.tableCards.push(...this.tableCardsTemp);
+            }
+            //this.activePlayer = this.nextPlayer();
+            this.logGameState();
+
+            // passa il turno
+            if (this.activePlayer.passTurn()) {
+                this.activePlayer = this.nextPlayer();
+                this.playerTurn = this.activePlayer.num;
+            }
+
         }
 
+        this.infoText.setText(`${this.activePlayer.name} turn -- ${this.currentRank}.`);
+
+
+
+        // gestire passaggio del turno
+        /* if (this.activePlayer.passTurn()) {
+            console.log("passTurn()");
+            this.activePlayer.disableCards();
+
+            this.activePlayer = this.nextPlayer();
+            this.playerTurn = this.activePlayer.num;
+            this.infoText.setText(`${this.activePlayer.name} turn -- ${this.currentRank}.`);
+            this.activePlayer.enableCards(); 
+
+            // gestisci i bot
+            if (!this.activePlayer.isThePlayer) {
+
+                console.log("isThePlayerisThePlayer" + !this.activePlayer.isThePlayer);
+
+                if (this.activePlayer.botDubitare()) {
+                    console.log(`${this.activePlayer.name} ha dubitato`);
+
+                    // controlla se le carte precedenti sono sbagliate
+                    if (this.tableCardsTemp.filter(c => c.rankNum !== this.currentRank)) {
+                        // player precedente ha mentito
+                        console.log("if");
+                        this.prevPlayer().addCards(this.tableCards);
+                        this.prevPlayer().addCards(this.tableCardsTemp);
+                    } else {
+                        // player attivo si prende le carte
+                        console.log("else");
+                        this.activePlayer.addCards(this.tableCards);
+                        this.activePlayer.addCards(this.tableCardsTemp);
+                    }
+                } else {
+                    this.tableCards.push(...this.tableCardsTemp);
+                }
+                this.tableCardsTemp = [];
+                //this.activePlayer = this.nextPlayer();
+                this.logGameState();
+
+            }
+        }
+ */
     }
 }
 
