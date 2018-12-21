@@ -37,7 +37,7 @@ export default class Card extends Phaser.GameObjects.Image {
             2: "Hearts",
             3: "Diamonds"
         };
-    
+
         this.rankNum = rankNum;
         this.suitNum = suitNum;
         this.rank = rankMap[rankNum] || rankNum.toString();
@@ -66,10 +66,10 @@ export default class Card extends Phaser.GameObjects.Image {
         // rendere questa carta interaggibile
         this.disableInteractive();
     }
-    show(){
+    show() {
         this.setFrame(this.spriteSheetFrame);
     }
-    hide(){
+    hide() {
         this.setFrame(this.spriteSheetCoverFrame);
     }
 }
