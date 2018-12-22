@@ -2,7 +2,7 @@
 
 // http://phaser.io/tutorials/making-your-first-phaser-3-game
 
-import { GameScene } from './Game';
+import GameScene from './Game.js';
 
 const config = {
     type: Phaser.AUTO,

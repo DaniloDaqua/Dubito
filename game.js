@@ -1,7 +1,6 @@
 import Card from './Card.js';
 import Player from './Player.js';
 import Bot from './Bot.js';
-import CardGroup from './CardGroup.js';
 import { Cycle, CardGroup, shuffle } from './Utils.js';
 
 export default class GameScene extends Phaser.Scene {

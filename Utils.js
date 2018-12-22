@@ -69,7 +69,7 @@ export class CardGroup {
     }
 }
 
-export class Cycle {
+export class Cycle extends Array {
 
     constructor(items) {
         super(...items);

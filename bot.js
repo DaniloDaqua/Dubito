@@ -1,6 +1,6 @@
 /*jshint esversion: 6 */
 
-import { Player } from './Player';
+import Player from './Player.js';
 
 export default class Bot extends Player {
 
