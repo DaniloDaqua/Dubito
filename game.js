@@ -8,8 +8,8 @@ export default class GameScene extends Phaser.Scene {
     constructor(config) {
         super(config);
         this.players = null;
-        this.table = CardGroup();
-        this.ranks = Cycle([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
+        this.table = new CardGroup();
+        this.ranks = new Cycle([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13])
     }
 
     get previousPlayerLied() {
@@ -67,7 +67,7 @@ export default class GameScene extends Phaser.Scene {
             3: { num: 3, x: 690, y: 70, vertical: true, name: 'Paperino' },    // right
         };
 
-        this.players = Cycle([
+        this.players = new Cycle([
             new Player(playerData[0], this),
             new Bot(playerData[1], this),
             new Bot(playerData[2], this),
@@ -85,7 +85,7 @@ export default class GameScene extends Phaser.Scene {
         // dare le carte a i giocatori finchè tutti possono averne 1 ad ogni giro
         while (deck.length >= this.players.length) {
             this.players.forEach(p => {
-                p.addCard(this.deck.pop());
+                p.addCard(deck.pop());
             });
         }
         // nel caso rimangono carte, mettile nel centro
@@ -158,7 +158,7 @@ export default class GameScene extends Phaser.Scene {
             card.input.enabled = false;
             card.hide();
 
-            this.table.current.push(card);
+            card.scene.table.current.push(card);
             card.scene.currentPlayer.removeCard(card);
 
         });
@@ -191,7 +191,7 @@ export default class GameScene extends Phaser.Scene {
         this.infoText.setText(`${ap.name} turn -- ${this.ranks.current}.`);
 
         // abilita / disabilita carte per giocatore
-        (ap.isThePlayer() ? ap.enableCards() : ap.disableCards());
+        (ap.isThePlayer ? ap.enableCards() : ap.disableCards());
 
         // controlla se il giocatore attivo ha dubitato
         if (ap.dubitato()) {
