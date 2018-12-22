@@ -3,7 +3,7 @@
 import Card from './Card.js';
 import Player from './Player.js';
 import Bot from './Bot.js';
-import {Cycle, CardGroup, shuffle} from './Utils.js';
+import {CardGroup, Cycle, shuffle} from './Utils.js';
 
 export default class GameScene extends Phaser.Scene {
 
@@ -106,7 +106,7 @@ export default class GameScene extends Phaser.Scene {
                 fill: "#000000",
                 padding: {x: 20, y: 10},
                 backgroundColor: "#ffffff"
-            })
+            });
 
         //  A drop zone
         const zone = this.add.zone(400, 300, 300, 300).setRectangleDropZone(300, 300);
