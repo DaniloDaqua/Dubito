@@ -1,31 +1,39 @@
 /*jshint esversion: 6 */
 
-import Player from './player.js';
+import { Player } from './Player';
 
 export default class Bot extends Player {
 
     constructor(playerData, scene) {
         super(playerData, scene);
-        
+
         let nextActionTime = null;
     }
 
     dubitato() {
-        if (this.scene.tableCardsTemp.length >= 4) {
+
+        // cards dell'ultimo giocatore
+        const lc = this.scene.tableCardsTemp;
+
+        if (!lc) {
+            // non ci sono carte
+            return false;
+        } else if (lc.length >= 4) {
             return true;
-        } else if (this.scene.tableCardsTemp.length >= 3) {
+        } else if (lc.length >= 3) {
             return Math.random() <= .75;
-        } else if (this.scene.tableCardsTemp.length >= 2) {
+        } else if (lc.length >= 2) {
             return Math.random() <= .50;
         } else {
             return Math.random() <= .25;
         }
     }
-    
+
     /**
      * Play some cards then pass turn
      */
     checkDone() {
+        // todo: play some cards
         const randCard = this.hand[Math.floor(Math.random() * this.hand.length)];
     }
 }

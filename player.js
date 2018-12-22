@@ -1,6 +1,6 @@
 /*jshint esversion: 6 */
 
-import BasePlayer from './basePlayer.js';
+import { BasePlayer } from './BasePlayer';
 
 export default class Player extends BasePlayer {
 

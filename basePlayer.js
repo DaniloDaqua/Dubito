@@ -1,6 +1,6 @@
 /*jshint esversion: 6 */
 
-import Card from './card.js';
+import { Card } from './Card';
 
 export default class BasePlayer {
     /**
