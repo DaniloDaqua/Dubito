@@ -15,28 +15,12 @@ export default class GameScene extends Phaser.Scene {
     }
 
     get previousPlayerLied() {
-        const f = c => c.rankNum !== this.previousRank;
+        const f = c => c.rankNum !== this.ranks.previous;
         return !!this.table.previous.filter(f);
     }
 
     get previousPlayerTruth() {
         return !this.previousPlayerLied;
-    }
-
-    get currentRank() {
-        return this.ranks.current;
-    }
-
-    get previousRank() {
-        return this.ranks.previous;
-    }
-
-    get currentPlayer() {
-        return this.players.current;
-    }
-
-    get previousPlayer() {
-        return this.players.previous;
     }
 
     passTurn() {
@@ -161,7 +145,7 @@ export default class GameScene extends Phaser.Scene {
             card.hide();
 
             card.scene.table.current.push(card);
-            card.scene.currentPlayer.removeCard(card);
+            card.scene.players.current.removeCard(card);
 
         });
 
@@ -183,20 +167,20 @@ export default class GameScene extends Phaser.Scene {
 
     dubito() {
         // chi è sfortunato prende le carte
-        const prende = (this.previousPlayerLied ? this.previousPlayer : this.currentPlayer);
+        const prende = (this.previousPlayerLied ? this.players.previous : this.players.current);
         prende.addCards(this.table.popAll());
     }
 
     update(time, delta) {
 
-        const ap = this.currentPlayer;
-        this.infoText.setText(`${ap.name} turn -- ${this.ranks.current}.`);
+        const cp = this.players.current;
+        this.infoText.setText(`${cp.name} turn -- ${this.ranks.current}.`);
 
         // abilita / disabilita carte per giocatore
-        (ap.isThePlayer ? ap.enableCards() : ap.disableCards());
+        (cp.isThePlayer ? cp.enableCards() : cp.disableCards());
 
         // controlla se il giocatore attivo ha dubitato
-        if (ap.dubitato()) {
+        if (cp.dubitato()) {
 
             // qualcuno prende le carte
             this.dubito();
@@ -210,7 +194,7 @@ export default class GameScene extends Phaser.Scene {
         }
 
         // controlla se il giocatore ha finito
-        if (ap.checkDone()) {
+        if (cp.checkDone()) {
             this.passTurn();
         }
 

@@ -85,8 +85,7 @@ export class Cycle extends Array {
         const i = this.__index + 1;
         if (i > this.length - 1) {
             return 0;
-        }
-        else {
+        } else {
             return i;
         }
     }
@@ -95,8 +94,7 @@ export class Cycle extends Array {
         const i = this.__index - 1;
         if (i < 0) {
             return this.length - 1;
-        }
-        else {
+        } else {
             return i;
         }
     }
@@ -125,9 +123,9 @@ export class Cycle extends Array {
 }
 
 /**
-* shuffle an array
-* @param {*} arra1 
-*/
+ * shuffle an array
+ * @param {*} arra1
+ */
 export function shuffle(arra1) {
     let ctr = arra1.length;
     let temp;
