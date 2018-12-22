@@ -1,7 +1,9 @@
+/*jshint esversion: 6 */
+
 import Card from './Card.js';
 import Player from './Player.js';
 import Bot from './Bot.js';
-import { Cycle, CardGroup, shuffle } from './Utils.js';
+import {Cycle, CardGroup, shuffle} from './Utils.js';
 
 export default class GameScene extends Phaser.Scene {
 
@@ -61,10 +63,10 @@ export default class GameScene extends Phaser.Scene {
         this.add.sprite(400, 300, "logo").setScale(0.4);
 
         const playerData = {
-            0: { num: 0, x: 160, y: 450, vertical: false, name: 'Player' }, // bottom (player)
-            1: { num: 1, x: 10, y: 70, vertical: true, name: 'Pippo' },     // left
-            2: { num: 2, x: 160, y: 10, vertical: false, name: 'Pluto' },   // top
-            3: { num: 3, x: 690, y: 70, vertical: true, name: 'Paperino' },    // right
+            0: {num: 0, x: 160, y: 450, vertical: false, name: 'Player'}, // bottom (player)
+            1: {num: 1, x: 10, y: 70, vertical: true, name: 'Pippo'},     // left
+            2: {num: 2, x: 160, y: 10, vertical: false, name: 'Pluto'},   // top
+            3: {num: 3, x: 690, y: 70, vertical: true, name: 'Paperino'},    // right
         };
 
         this.players = new Cycle([
@@ -102,7 +104,7 @@ export default class GameScene extends Phaser.Scene {
             .text(13, 550, '', {
                 font: "18px monospace",
                 fill: "#000000",
-                padding: { x: 20, y: 10 },
+                padding: {x: 20, y: 10},
                 backgroundColor: "#ffffff"
             })
 

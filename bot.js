@@ -13,7 +13,7 @@ export default class Bot extends Player {
     dubitato() {
 
         // cards dell'ultimo giocatore
-        const lc = this.scene.tableCardsTemp;
+        const lc = this.scene.table.previous;
 
         if (!lc) {
             // non ci sono carte
