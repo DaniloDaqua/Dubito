@@ -24,14 +24,14 @@ export class CardGroup {
      * active player cards
      */
     get current() {
-        return this.history[-1];
+        return this.history[this.history.length - 1];
     }
 
     /**
      * previous player cards
      */
     get previous() {
-        return this.history[-2];
+        return this.history[this.history.length - 2];
     }
 
     /**
@@ -39,7 +39,8 @@ export class CardGroup {
      */
     get top() {
         // use .top in case some empty groups exist
-        return this.all[-1] || null;
+        const a = this.all;
+        return a[a.length - 1] || null;
     }
 
     /**
@@ -47,7 +48,7 @@ export class CardGroup {
      * @param {Card} card a single card
      */
     addCard(card) {
-        this.history[-1].push(card);
+        this.history[this.history.length - 1].push(card);
         return this;
     }
 
@@ -105,21 +106,21 @@ export class Cycle extends Array {
     }
 
     get next() {
-        return this[this.nextIndex()];
+        return this[this.nextIndex];
     }
 
     get previous() {
-        return this[this.previousIndex()];
+        return this[this.previousIndex];
     }
 
     step() {
-        this.__index = this.nextIndex();
-        return this.current();
+        this.__index = this.nextIndex;
+        return this.current;
     }
 
     back() {
-        this.__index = this.previousIndex();
-        return this.current();
+        this.__index = this.previousIndex;
+        return this.current;
     }
 }
 
@@ -128,20 +129,20 @@ export class Cycle extends Array {
 * @param {*} arra1 
 */
 export function shuffle(arra1) {
-   let ctr = arra1.length;
-   let temp;
-   let index;
+    let ctr = arra1.length;
+    let temp;
+    let index;
 
-   // While there are elements in the array
-   while (ctr > 0) {
-       // Pick a random index
-       index = Math.floor(Math.random() * ctr);
-       // Decrease ctr by 1
-       ctr--;
-       // And swap the last element with it
-       temp = arra1[ctr];
-       arra1[ctr] = arra1[index];
-       arra1[index] = temp;
-   }
-   return arra1;
+    // While there are elements in the array
+    while (ctr > 0) {
+        // Pick a random index
+        index = Math.floor(Math.random() * ctr);
+        // Decrease ctr by 1
+        ctr--;
+        // And swap the last element with it
+        temp = arra1[ctr];
+        arra1[ctr] = arra1[index];
+        arra1[index] = temp;
+    }
+    return arra1;
 }
