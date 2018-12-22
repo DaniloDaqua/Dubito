@@ -4,9 +4,9 @@ import Card from './Card.js';
 
 export default class BasePlayer {
     /**
-     * 
-     * @param {string} name nome del giocatore
-     * @param {Card[]} cards lista di carte
+     *
+     * @param playerData
+     * @param scene
      */
     constructor(playerData, scene) {
         this.scene = scene;
@@ -18,6 +18,7 @@ export default class BasePlayer {
         this.hand = [];
         this.isThePlayer = !this.num;
     }
+
     /**
      * aggiunge una carta
      * @param {Card} card carta da aggiungere
@@ -32,21 +33,23 @@ export default class BasePlayer {
         this.orderCards();
         return this;
     }
+
     addCards(cards) {
         cards.forEach(c => this.addCard(c));
     }
+
     removeCard(card) {
         this.hand = this.hand.filter(c => c.cardId !== card.cardId);
         this.orderCards();
         return this;
     }
+
     orderCards() {
         this.hand.sort(Card.compare);
 
         const cardSpacing = 20;
         const pw = position => position * cardSpacing * 1.6;
         const ph = position => position * cardSpacing * 1.3;
-        const isPlayer = playerNumber => playerNumber === 0;
 
         let cardPosition = 1;
 
@@ -68,14 +71,22 @@ export default class BasePlayer {
 
         return this;
     }
+
     enableCards() {
         this.hand.map(c => c.enable());
         return this;
     }
+
     disableCards() {
         this.hand.map(c => c.disable());
         return this;
     }
-    checkDone() { return null; }
-    dubitato() { return null; }
+
+    checkDone() {
+        return null;
+    }
+
+    dubitato() {
+        return null;
+    }
 }

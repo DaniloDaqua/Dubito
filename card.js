@@ -1,6 +1,6 @@
 /**
  * Un ogetto che rappresenta una carta
- * 
+ *
  * @property {number} number numero della carta da 1-13
  * @property {number} suitNum seme della carta da 0-3
  * @property {string} rank 'ace', '2', '6', 'jack', ecc
@@ -47,28 +47,35 @@ export default class Card extends Phaser.GameObjects.Image {
         this.spriteSheetCoverFrame = 13;
 
     }
+
     static compareRank(a, b) {
         return a.rankNum - b.rankNum;
     }
+
     static compareSuit(a, b) {
         return a.suitNum - b.suitNum;
     }
+
     static compare(a, b) {
         // sorta per numero e per seme
         return Card.compareRank(a, b) || Card.compareSuit(a, b);
     }
+
     enable() {
         // rendere questa carta interaggibile
         this.setInteractive();
         this.scene.input.setDraggable(this);
     }
+
     disable() {
         // rendere questa carta interaggibile
         this.disableInteractive();
     }
+
     show() {
         this.setFrame(this.spriteSheetFrame);
     }
+
     hide() {
         this.setFrame(this.spriteSheetCoverFrame);
     }

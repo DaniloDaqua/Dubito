@@ -1,8 +1,8 @@
 /*jshint esversion: 6 */
 
-import Player from './Player.js';
+import BasePlayer from "./BasePlayer.js";
 
-export default class Bot extends Player {
+export default class Bot extends BasePlayer {
 
     constructor(playerData, scene) {
         super(playerData, scene);
