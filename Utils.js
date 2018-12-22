@@ -82,7 +82,7 @@ export class Cycle extends Array {
 
     get nextIndex() {
         const i = this.__index + 1;
-        if (i > this.items.length - 1) {
+        if (i > this.length - 1) {
             return 0;
         }
         else {
@@ -93,7 +93,7 @@ export class Cycle extends Array {
     get previousIndex() {
         const i = this.__index - 1;
         if (i < 0) {
-            return this.items.length - 1;
+            return this.length - 1;
         }
         else {
             return i;
@@ -101,15 +101,15 @@ export class Cycle extends Array {
     }
 
     get current() {
-        return this.__index[this.__index];
+        return this[this.__index];
     }
 
     get next() {
-        return this.items[this.nextIndex()];
+        return this[this.nextIndex()];
     }
 
     get previous() {
-        return this.items[this.previousIndex()];
+        return this[this.previousIndex()];
     }
 
     step() {
